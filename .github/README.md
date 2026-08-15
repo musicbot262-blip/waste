@@ -92,7 +92,7 @@ Built with Python, Pyrogram, and Py-TgCalls, it’s optimized for reliability an
    ```
 5. **Clone the Repository**
    ```bash
-   git clone https://github.com/TeamAloneOp/AloneX && cd AloneX
+   git clone https://t.me/jp_network && cd AloneX
    ```
 6. **Install Requirements**
    ```bash
