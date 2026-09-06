@@ -25,6 +25,8 @@ class MongoDB:
         self.blacklisted = []
         self.cmd_delete = []
         self.notified = []
+        self.vc_logs = {}
+        self.welcome = {}
         self.cache = self.db.cache
         self.logger = False
 
@@ -205,6 +207,35 @@ class MongoDB:
         await self.chatsdb.update_one(
             {"_id": chat_id},
             {"$set": {"cmd_delete": delete}},
+            upsert=True,
+        )
+
+    # VC LOGS / WELCOME SETTINGS
+    async def get_vc_logs(self, chat_id: int) -> bool:
+        if chat_id not in self.vc_logs:
+            doc = await self.chatsdb.find_one({"_id": chat_id})
+            self.vc_logs[chat_id] = bool(doc.get("vc_logs", False)) if doc else False
+        return self.vc_logs[chat_id]
+
+    async def set_vc_logs(self, chat_id: int, status: bool) -> None:
+        self.vc_logs[chat_id] = status
+        await self.chatsdb.update_one(
+            {"_id": chat_id},
+            {"$set": {"vc_logs": status}},
+            upsert=True,
+        )
+
+    async def get_welcome(self, chat_id: int) -> bool:
+        if chat_id not in self.welcome:
+            doc = await self.chatsdb.find_one({"_id": chat_id})
+            self.welcome[chat_id] = bool(doc.get("welcome", False)) if doc else False
+        return self.welcome[chat_id]
+
+    async def set_welcome(self, chat_id: int, status: bool) -> None:
+        self.welcome[chat_id] = status
+        await self.chatsdb.update_one(
+            {"_id": chat_id},
+            {"$set": {"welcome": status}},
             upsert=True,
         )
 
